@@ -4,7 +4,7 @@
 
 This repository provides an event-driven input management system for Unity using the **Unity Input System**. It simplifies input handling by exposing events for various gamepad controls, allowing developers to subscribe and react to inputs efficiently.
 
-The input action map is created for gamepad and keyboard primarily.
+The input action map is created for gamepad primarily. Keyboard binding are added but require custom mapping and configuration depending on your input control requirements.
 
 ![InputManagerGamepad_01](https://github.com/user-attachments/assets/7410817e-5667-4fe1-a700-73e12c11f392)
 
