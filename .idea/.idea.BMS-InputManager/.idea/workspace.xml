@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0d0fdf1-dd3f-492d-9a69-57cf52599fa6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputDebugger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputDebugger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputVisualiser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputVisualiser.cs" afterDir="false" />
-    </list>
+    <list default="true" id="c0d0fdf1-dd3f-492d-9a69-57cf52599fa6" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../GDAD-CoreURP/Assets/InputManager/Scripts/InputHandler.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 2
@@ -86,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1736263043006</updated>
-      <workItem from="1736263045259" duration="1266000" />
+      <workItem from="1736263045259" duration="1871000" />
     </task>
     <servers />
   </component>
