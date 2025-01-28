@@ -165,9 +165,9 @@ public class InputDebugger : MonoBehaviour
         DebugLog($"RightStick with input: {input}", true);
     }
 
-    private void ButtonSouth()
+    private void ButtonSouth(bool pressed)
     {
-        DebugLog("ButtonSouth pressed!", false);
+        DebugLog("ButtonSouth pressed! : " + pressed, false);
     }
 
     private void ButtonWest()
@@ -306,7 +306,7 @@ public class InputDebugger : MonoBehaviour
         DebugLog("RightStick canceled!", true);
     }
 
-    private void ButtonSouthCanceled()
+    private void ButtonSouthCanceled( bool pressed)
     {
         DebugLog("ButtonSouth canceled!", false);
     }

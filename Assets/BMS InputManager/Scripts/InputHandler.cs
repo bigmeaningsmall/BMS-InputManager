@@ -11,8 +11,8 @@ public class InputHandler : MonoBehaviour
     public event Action OnRightStickCanceled;
     public event Action OnButtonNorth;
     public event Action OnButtonNorthCanceled;
-    public event Action OnButtonSouth;
-    public event Action OnButtonSouthCanceled;
+    public event Action<bool> OnButtonSouth;
+    public event Action<bool> OnButtonSouthCanceled;
     public event Action OnButtonEast;
     public event Action OnButtonEastCanceled;
     public event Action OnButtonWest;
@@ -345,9 +345,15 @@ public class InputHandler : MonoBehaviour
 
     private void HandleButtonSouth(InputAction.CallbackContext context)
     {
-        OnButtonSouth?.Invoke();
+        // Read the float value from the button control
+        float inputValue = context.ReadValue<float>();
+        // Convert the float value to a boolean
+        bool isPressed = inputValue > 0.5f ? true : false; // You can adjust the threshold value
+//        Debug.Log(isPressed);
+        // Invoke the event with the boolean value
+        OnButtonSouth?.Invoke(isPressed);
     }
-
+    
     private void HandleButtonNorth(InputAction.CallbackContext context)
     {
         OnButtonNorth?.Invoke();
@@ -502,7 +508,13 @@ public class InputHandler : MonoBehaviour
     
     private void HandleButtonSouthCanceled(InputAction.CallbackContext context)
     {
-        OnButtonSouthCanceled?.Invoke();
+        // Read the float value from the button control
+        float inputValue = context.ReadValue<float>();
+        // Convert the float value to a boolean
+        bool isPressed = inputValue < 0.5f ? false : true; // You can adjust the threshold value
+//        Debug.Log(isPressed);
+        // Invoke the event with the boolean value
+        OnButtonSouth?.Invoke(isPressed);
     }
     
     private void HandleButtonNorthCanceled(InputAction.CallbackContext context)

@@ -249,7 +249,7 @@ public class InputVisualiser : MonoBehaviour
         rightStickVector.text = input.ToString("F2");
     }
 
-    private void ButtonSouth()
+    private void ButtonSouth(bool pressed)
     {
         btnSouth.color = activeColor;
     }
@@ -408,7 +408,7 @@ public class InputVisualiser : MonoBehaviour
         rightStickVector.text = ("(0.00, 0.00)");
     }
     
-    private void ButtonSouthCanceled()
+    private void ButtonSouthCanceled(bool pressed)
     {
         btnSouth.color = inactiveColor;
     }
