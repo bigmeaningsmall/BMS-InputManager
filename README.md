@@ -1,3 +1,12 @@
+
+# Plant UML
+
+https://www.plantuml.com/plantuml/umla/xLT1KnGz4BtpA-QuNtroyMXH5WWhQe5GhAldp4mpHBB9L99PeDJ_BjdTmPxjxUbGUiIJz7jvwUdiItSEGrG-TWkpLnaLGl7Hjbtye6njm1S_zeh7V_yNi0GRYwCgQcSFla8LdN_zjhYmPt0TPr5Njpju63vMjW83jI1tfPiRNW_ZM93otdKnEllP-NWZ4dAKPguZIeIGfJHL8KfuZiut2572nuf-RPoA_Gb-yRffmE_W3GcoO7z6l29cK4b-xqiF8MJmhi208aIoDLNaYLII_CPlN6Tgy1A3VY_TbOYn5Ah6k6_rfJaSEJj4bacYugMgKmAZeAYmsd4S5JNcxGWahZvnTtOKp3odGIruIgOQgGl7oTIRjo8XKsbGBvuY_ngPiZ4SMOyf74lALPotCaFMOeh7SBBwMchz8Y5B2GnKKMPiQIsThekZEtKBa_zmwC9EhIeDYPxei0d_siFpoWcKNTEWWMKmnMZqnmOldJD5dLOTMMLSi-870gvJnw2O7mslaZjppIH4hsrJB204rS2hzJuwh3COB7domMGp7Qs_OS19nosIq7Wo8S1wJ23nVZBQ1KpLzWBKUoUh8O19LIHjD_i9bU1Xt6FfGWeDgypjnu6RraI2QH6DpbiIIWPbSg72mzkQmUOj0z2jXhSYnTZDy7L54MuxT9DGeByNXWXvDp2xCJYPoGc1pCYi2HW26TPPK_2VCCwWCoqlGHd457mQ0cLe4bw68H7Ji60IuT5voqAususOIg3mssEJ2GII2cCwWSCaGqp8C_XqY2av0ctQfErEKwEVTMMel6vJjv_UgqLh8BiDzutBz0LSBTW2VVeUXA8cNVvnEWqdVzDeSZKbuuVvka4Pz336SOziXsKCCXkE9pu6ycS8EYEzp0ZvRVwbc_nzAw2EFtTB-4ScnwPQFChEMkZV1IaPNPUkVYXycU-PJ8C8ljengSpRMaKWnVZKBThyOZ3N5Yx3zqV1zyvNC8YsBkYebt3grLB7X_FEHDqQlNKlMMWKms9Ashy_JhthR0trCmijN23FhowEfT9klcGxXMDdZ0wfsTW8VlBqPr7r_sCNtEkuav_ETN1m1p_tzxTUbc-Ai6vq9OGYEexFjaHvFJ5Ovf9KAsx98TYwMvZV
+
+
+
+---
+
 # BMS-InputManager
 
 ## Unity Event-Based Input Manager
@@ -16,7 +25,18 @@ The input action map is created for gamepad primarily. Keyboard binding are adde
 - Supports all standard controller inputs (buttons, sticks, triggers, and D-pad).
 - Simple subscription model for listening to input events.
 - Debugging utilities to log inputs in real-time.
-- A visualisation scene (`Scene-GamepadInputVisualiser`) to display active inputs.
+
+### Scene Examples 
+- `Scene-GamepadInputVisualiser` 
+	- Display active inputs - Gamepad
+- `Scene-InputExample-Gamepad&Keyboard`
+	-  Debug inputs from Gamepad and Keyboard
+- `Scene-LocalMultiplayer`
+	- Example using 'PlayerInputManager' to instantiate multiple players or input devices
+- `Scene-LocalMultiplayerSplitScreen`
+	- Example using 'PlayerInputManager' to instantiate multiple players or input devices with split screen
+- `Scene-SinglePlayer-AnyDevice` 
+	- Example taking input from any device connected
 
 ## Getting Started
 
@@ -138,3 +158,5 @@ Feel free to fork, modify, and submit pull requests. Contributions and feedback 
 This project is open-source and licensed under the MIT License.
 
 
+# UML
+![BMS-InputManager-UML](https://github.com/user-attachments/assets/fe42eced-0880-4b6b-a046-cf969ce0eba8)
