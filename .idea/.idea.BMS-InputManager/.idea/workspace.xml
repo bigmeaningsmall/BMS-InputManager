@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c0d0fdf1-dd3f-492d-9a69-57cf52599fa6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BMS-InputManager/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BMS-InputManager/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputDebugger.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputDebugger.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputExample.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputExample.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputHandler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputHandler.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputVisualiser.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BMS InputManager/Scripts/InputVisualiser.cs.meta" beforeDir="false" />
-    </list>
+    <list default="true" id="c0d0fdf1-dd3f-492d-9a69-57cf52599fa6" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -105,7 +95,7 @@
       <workItem from="1736263045259" duration="1871000" />
       <workItem from="1738068378967" duration="213000" />
       <workItem from="1738069552331" duration="7222000" />
-      <workItem from="1738100970377" duration="79000" />
+      <workItem from="1738100970377" duration="1259000" />
     </task>
     <servers />
   </component>
