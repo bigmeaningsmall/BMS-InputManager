@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InputActionState : MonoBehaviour
+public class InputActionState 
 {
     private bool wasPressed = false;
     private bool isPressed = false;
