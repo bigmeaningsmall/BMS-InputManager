@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
-using System.Collections;
 
 
 public class InputVisualiser : MonoBehaviour
@@ -47,8 +46,18 @@ public class InputVisualiser : MonoBehaviour
     public TextMeshProUGUI leftTriggerPressure;
     public TextMeshProUGUI rightTriggerPressure;
     
-    private bool leftTriggerStatusChanged = false;
-    private bool rightTriggerStatusChanged = false;
+    // Trigger status lifecycle shown in the UI: Pressed -> Held -> Released -> reset to idle.
+    // Driven by the digital trigger press/release events plus a timer in Update, so it doesn't
+    // depend on the ordering between the digital Released and the analog Canceled events.
+    private enum TriggerState { Idle, Pressed, Held, Released }
+    private TriggerState leftTriggerState = TriggerState.Idle;
+    private TriggerState rightTriggerState = TriggerState.Idle;
+    private float leftTriggerStateTime;
+    private float rightTriggerStateTime;
+
+    [Header("Trigger Status Timing")]
+    [SerializeField] private float pressedDisplayTime = 0.15f; // how long "Pressed" shows before "Held"
+    [SerializeField] private float releasedResetTime = 1.0f;   // how long "Released" shows before reset
 
     #region inputHandler Events Subscription
     private void OnEnable()
@@ -190,6 +199,52 @@ public class InputVisualiser : MonoBehaviour
         initialLeftStickPosition = leftStick.transform.localPosition;
         initialRightStickPosition = rightStick.transform.localPosition;
     }
+
+    private void Update()
+    {
+        // Advance the trigger status lifecycle: Pressed auto-promotes to Held after a moment,
+        // and Released auto-resets to idle ("- - -") after the reset delay.
+        UpdateTriggerStatus(ref leftTriggerState, ref leftTriggerStateTime, leftTriggerStatus);
+        UpdateTriggerStatus(ref rightTriggerState, ref rightTriggerStateTime, rightTriggerStatus);
+    }
+
+    private void UpdateTriggerStatus(ref TriggerState state, ref float stateTime, TextMeshProUGUI label)
+    {
+        switch (state)
+        {
+            case TriggerState.Pressed:
+                if (Time.time - stateTime >= pressedDisplayTime)
+                {
+                    state = TriggerState.Held;
+                    stateTime = Time.time;
+                    label.text = "Held";
+                }
+                break;
+
+            case TriggerState.Released:
+                if (Time.time - stateTime >= releasedResetTime)
+                {
+                    state = TriggerState.Idle;
+                    stateTime = Time.time;
+                    label.text = "- - -";
+                }
+                break;
+        }
+    }
+
+    private void SetLeftTriggerState(TriggerState state, string label)
+    {
+        leftTriggerState = state;
+        leftTriggerStateTime = Time.time;
+        leftTriggerStatus.text = label;
+    }
+
+    private void SetRightTriggerState(TriggerState state, string label)
+    {
+        rightTriggerState = state;
+        rightTriggerStateTime = Time.time;
+        rightTriggerStatus.text = label;
+    }
     
     private void SetGraphics()
     {
@@ -287,15 +342,13 @@ public class InputVisualiser : MonoBehaviour
     
     private void LeftTriggerPress()
     {
-        leftTriggerStatusChanged = true;
-        leftTriggerStatus.text = "Pressed";
+        SetLeftTriggerState(TriggerState.Pressed, "Pressed");
     }
 
     private void RightTriggerPress()
     {
-        rightTriggerStatusChanged = true;
-        rightTriggerStatus.text = "Pressed";
-    } 
+        SetRightTriggerState(TriggerState.Pressed, "Pressed");
+    }
 
     private void LeftShoulder()
     {
@@ -428,43 +481,28 @@ public class InputVisualiser : MonoBehaviour
         btnEast.color = inactiveColor;
     }
 
+    // Analog trigger returned to zero: reset the button graphic and pressure readout only.
+    // The status text (Pressed/Held/Released) is owned by the digital lifecycle below.
     private void LeftTriggerCanceled()
     {
         btnLeftTrigger.color = inactiveColor;
-        leftTriggerStatus.text = "Canceled";
         leftTriggerPressure.text = "0.00";
-        leftTriggerStatusChanged = false;
-        StartCoroutine(ResetTriggerStatus(leftTriggerStatus, () => leftTriggerStatusChanged));
     }
 
     private void RightTriggerCanceled()
     {
         btnRightTrigger.color = inactiveColor;
-        rightTriggerStatus.text = "Canceled";
         rightTriggerPressure.text = "0.00";
-        rightTriggerStatusChanged = false;
-        StartCoroutine(ResetTriggerStatus(rightTriggerStatus, () => rightTriggerStatusChanged));
     }
 
-    private IEnumerator ResetTriggerStatus(TextMeshProUGUI triggerStatus, System.Func<bool> statusChanged)
-    {
-        yield return new WaitForSeconds(1);
-        if (!statusChanged())
-        {
-            triggerStatus.text = "- - -";
-        }
-    }
-    
     private void LeftTriggerReleased()
     {
-        leftTriggerStatusChanged = true;
-        leftTriggerStatus.text = "Released";
+        SetLeftTriggerState(TriggerState.Released, "Released");
     }
 
     private void RightTriggerReleased()
     {
-        rightTriggerStatusChanged = true;
-        rightTriggerStatus.text = "Released";
+        SetRightTriggerState(TriggerState.Released, "Released");
     }
     
     private void LeftShoulderCanceled()

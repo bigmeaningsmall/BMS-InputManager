@@ -197,7 +197,9 @@ public class InputHandler : MonoBehaviour
         rightTriggerAction.performed += HandleRightTrigger;
         rightTriggerAction.canceled += HandleRightTriggerCanceled;
         leftTriggerPressedAction.performed += HandleLeftTriggerPressed;
+        leftTriggerPressedAction.canceled += HandleLeftTriggerReleased;
         rightTriggerPressedAction.performed += HandleRightTriggerPressed;
+        rightTriggerPressedAction.canceled += HandleRightTriggerReleased;
         leftShoulderAction.performed += HandleLeftShoulder;
         leftShoulderAction.canceled += HandleLeftShoulderCanceled;
         rightShoulderAction.performed += HandleRightShoulder;
@@ -256,7 +258,9 @@ public class InputHandler : MonoBehaviour
         rightTriggerAction.performed -= HandleRightTrigger;
         rightTriggerAction.canceled -= HandleRightTriggerCanceled;
         leftTriggerPressedAction.performed -= HandleLeftTriggerPressed;
+        leftTriggerPressedAction.canceled -= HandleLeftTriggerReleased;
         rightTriggerPressedAction.performed -= HandleRightTriggerPressed;
+        rightTriggerPressedAction.canceled -= HandleRightTriggerReleased;
         leftShoulderAction.performed -= HandleLeftShoulder;
         leftShoulderAction.canceled -= HandleLeftShoulderCanceled;
         rightShoulderAction.performed -= HandleRightShoulder;
@@ -370,28 +374,27 @@ public class InputHandler : MonoBehaviour
         OnRightTrigger?.Invoke(input);
     }
     
+    // Digital trigger press/release. The trigger-press actions are plain Button actions,
+    // so performed fires when the trigger crosses the press point and canceled fires when
+    // it drops back below it - same pattern as the face buttons.
     private void HandleLeftTriggerPressed(InputAction.CallbackContext context)
     {
-        if (context.control.IsPressed())
-        {
-            OnLeftTriggerPressed?.Invoke();
-        }
-        else
-        {
-            OnLeftTriggerReleased?.Invoke();
-        }
+        OnLeftTriggerPressed?.Invoke();
+    }
+
+    private void HandleLeftTriggerReleased(InputAction.CallbackContext context)
+    {
+        OnLeftTriggerReleased?.Invoke();
     }
 
     private void HandleRightTriggerPressed(InputAction.CallbackContext context)
     {
-        if (context.control.IsPressed())
-        {
-            OnRightTriggerPressed?.Invoke();
-        }
-        else
-        {
-            OnRightTriggerReleased?.Invoke();
-        }
+        OnRightTriggerPressed?.Invoke();
+    }
+
+    private void HandleRightTriggerReleased(InputAction.CallbackContext context)
+    {
+        OnRightTriggerReleased?.Invoke();
     }
     
     private void HandleLeftShoulder(InputAction.CallbackContext context)
