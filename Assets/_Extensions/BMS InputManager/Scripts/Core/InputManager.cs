@@ -4,7 +4,34 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     public InputHandler inputHandler; // Reference to the InputHandler script
-    
+
+    #region Cached Button Delegates
+    private Action _onButtonSouthPressed,      _onButtonSouthCanceled;
+    private Action _onButtonNorthPressed,      _onButtonNorthCanceled;
+    private Action _onButtonEastPressed,       _onButtonEastCanceled;
+    private Action _onButtonWestPressed,       _onButtonWestCanceled;
+    private Action _onLeftShoulderPressed,     _onLeftShoulderCanceled;
+    private Action _onRightShoulderPressed,    _onRightShoulderCanceled;
+    private Action _onLeftStickPressPressed,   _onLeftStickPressCanceled;
+    private Action _onRightStickPressPressed,  _onRightStickPressCanceled;
+    private Action _onPadLeftPressed,          _onPadLeftCanceled;
+    private Action _onPadRightPressed,         _onPadRightCanceled;
+    private Action _onPadUpPressed,            _onPadUpCanceled;
+    private Action _onPadDownPressed,          _onPadDownCanceled;
+    private Action _onLeftStickLeftPressed,    _onLeftStickLeftCanceled;
+    private Action _onLeftStickRightPressed,   _onLeftStickRightCanceled;
+    private Action _onLeftStickUpPressed,      _onLeftStickUpCanceled;
+    private Action _onLeftStickDownPressed,    _onLeftStickDownCanceled;
+    private Action _onRightStickLeftPressed,   _onRightStickLeftCanceled;
+    private Action _onRightStickRightPressed,  _onRightStickRightCanceled;
+    private Action _onRightStickUpPressed,     _onRightStickUpCanceled;
+    private Action _onRightStickDownPressed,   _onRightStickDownCanceled;
+    private Action _onButtonStartPressed,      _onButtonStartCanceled;
+    private Action _onButtonSelectPressed,     _onButtonSelectCanceled;
+    private Action _onLeftTriggerPressed,      _onLeftTriggerReleased;
+    private Action _onRightTriggerPressed,     _onRightTriggerReleased;
+    #endregion
+
     #region Action States for Buttons
     public InputActionState ButtonSouth { get; private set; } = new InputActionState();
     public InputActionState ButtonNorth { get; private set; } = new InputActionState();
@@ -90,69 +117,71 @@ public class InputManager : MonoBehaviour
         inputHandler.OnRightTrigger += HandleRightTrigger;
         inputHandler.OnRightTriggerCanceled += HandleRightTriggerCanceled;
         
-        // Subscribe to button events - Face Buttons
-        inputHandler.OnButtonSouth += () => ButtonSouth.SetState(true);
-        inputHandler.OnButtonSouthCanceled += () => ButtonSouth.SetState(false);
-        inputHandler.OnButtonNorth += () => ButtonNorth.SetState(true);
-        inputHandler.OnButtonNorthCanceled += () => ButtonNorth.SetState(false);
-        inputHandler.OnButtonEast += () => ButtonEast.SetState(true);
-        inputHandler.OnButtonEastCanceled += () => ButtonEast.SetState(false);
-        inputHandler.OnButtonWest += () => ButtonWest.SetState(true);
-        inputHandler.OnButtonWestCanceled += () => ButtonWest.SetState(false);
+        // this unscbscribe setup had to be added as events we're not unsubscribing so we would have a memory leak and event being duplicated when creating inputs
         
-        // Subscribe to button events - Shoulders
-        inputHandler.OnLeftShoulder += () => LeftShoulder.SetState(true);
-        inputHandler.OnLeftShoulderCanceled += () => LeftShoulder.SetState(false);
-        inputHandler.OnRightShoulder += () => RightShoulder.SetState(true);
-        inputHandler.OnRightShoulderCanceled += () => RightShoulder.SetState(false);
-        
-        // Subscribe to button events - Stick Presses
-        inputHandler.OnLeftStickPress += () => LeftStickPress.SetState(true);
-        inputHandler.OnLeftStickPressCanceled += () => LeftStickPress.SetState(false);
-        inputHandler.OnRightStickPress += () => RightStickPress.SetState(true);
-        inputHandler.OnRightStickPressCanceled += () => RightStickPress.SetState(false);
-        
-        // Subscribe to button events - D-Pad
-        inputHandler.OnPadLeft += () => PadLeft.SetState(true);
-        inputHandler.OnPadLeftCanceled += () => PadLeft.SetState(false);
-        inputHandler.OnPadRight += () => PadRight.SetState(true);
-        inputHandler.OnPadRightCanceled += () => PadRight.SetState(false);
-        inputHandler.OnPadUp += () => PadUp.SetState(true);
-        inputHandler.OnPadUpCanceled += () => PadUp.SetState(false);
-        inputHandler.OnPadDown += () => PadDown.SetState(true);
-        inputHandler.OnPadDownCanceled += () => PadDown.SetState(false);
-        
-        // Subscribe to button events - Left Stick Directions
-        inputHandler.OnLeftStickLeft += () => LeftStickLeft.SetState(true);
-        inputHandler.OnLeftStickLeftCanceled += () => LeftStickLeft.SetState(false);
-        inputHandler.OnLeftStickRight += () => LeftStickRight.SetState(true);
-        inputHandler.OnLeftStickRightCanceled += () => LeftStickRight.SetState(false);
-        inputHandler.OnLeftStickUp += () => LeftStickUp.SetState(true);
-        inputHandler.OnLeftStickUpCanceled += () => LeftStickUp.SetState(false);
-        inputHandler.OnLeftStickDown += () => LeftStickDown.SetState(true);
-        inputHandler.OnLeftStickDownCanceled += () => LeftStickDown.SetState(false);
-        
-        // Subscribe to button events - Right Stick Directions
-        inputHandler.OnRightStickLeft += () => RightStickLeft.SetState(true);
-        inputHandler.OnRightStickLeftCanceled += () => RightStickLeft.SetState(false);
-        inputHandler.OnRightStickRight += () => RightStickRight.SetState(true);
-        inputHandler.OnRightStickRightCanceled += () => RightStickRight.SetState(false);
-        inputHandler.OnRightStickUp += () => RightStickUp.SetState(true);
-        inputHandler.OnRightStickUpCanceled += () => RightStickUp.SetState(false);
-        inputHandler.OnRightStickDown += () => RightStickDown.SetState(true);
-        inputHandler.OnRightStickDownCanceled += () => RightStickDown.SetState(false);
-        
-        // Subscribe to button events - Start/Select
-        inputHandler.OnButtonStart += () => ButtonStart.SetState(true);
-        inputHandler.OnButtonStartCanceled += () => ButtonStart.SetState(false);
-        inputHandler.OnButtonSelect += () => ButtonSelect.SetState(true);
-        inputHandler.OnButtonSelectCanceled += () => ButtonSelect.SetState(false);
-        
-        // Subscribe to button events - Trigger Presses
-        inputHandler.OnLeftTriggerPressed += () => LeftTriggerPressed.SetState(true);
-        inputHandler.OnLeftTriggerReleased += () => LeftTriggerPressed.SetState(false);
-        inputHandler.OnRightTriggerPressed += () => RightTriggerPressed.SetState(true);
-        inputHandler.OnRightTriggerReleased += () => RightTriggerPressed.SetState(false);
+        // Cache and subscribe button delegates - Face Buttons
+        inputHandler.OnButtonSouth         += _onButtonSouthPressed      = () => ButtonSouth.SetState(true); 
+        inputHandler.OnButtonSouthCanceled += _onButtonSouthCanceled     = () => ButtonSouth.SetState(false);
+        inputHandler.OnButtonNorth         += _onButtonNorthPressed      = () => ButtonNorth.SetState(true);
+        inputHandler.OnButtonNorthCanceled += _onButtonNorthCanceled     = () => ButtonNorth.SetState(false);
+        inputHandler.OnButtonEast          += _onButtonEastPressed       = () => ButtonEast.SetState(true);
+        inputHandler.OnButtonEastCanceled  += _onButtonEastCanceled      = () => ButtonEast.SetState(false);
+        inputHandler.OnButtonWest          += _onButtonWestPressed       = () => ButtonWest.SetState(true);
+        inputHandler.OnButtonWestCanceled  += _onButtonWestCanceled      = () => ButtonWest.SetState(false);
+
+        // Shoulders
+        inputHandler.OnLeftShoulder          += _onLeftShoulderPressed    = () => LeftShoulder.SetState(true);
+        inputHandler.OnLeftShoulderCanceled  += _onLeftShoulderCanceled   = () => LeftShoulder.SetState(false);
+        inputHandler.OnRightShoulder         += _onRightShoulderPressed   = () => RightShoulder.SetState(true);
+        inputHandler.OnRightShoulderCanceled += _onRightShoulderCanceled  = () => RightShoulder.SetState(false);
+
+        // Stick Presses
+        inputHandler.OnLeftStickPress          += _onLeftStickPressPressed   = () => LeftStickPress.SetState(true);
+        inputHandler.OnLeftStickPressCanceled  += _onLeftStickPressCanceled  = () => LeftStickPress.SetState(false);
+        inputHandler.OnRightStickPress         += _onRightStickPressPressed  = () => RightStickPress.SetState(true);
+        inputHandler.OnRightStickPressCanceled += _onRightStickPressCanceled = () => RightStickPress.SetState(false);
+
+        // D-Pad
+        inputHandler.OnPadLeft        += _onPadLeftPressed   = () => PadLeft.SetState(true);
+        inputHandler.OnPadLeftCanceled += _onPadLeftCanceled = () => PadLeft.SetState(false);
+        inputHandler.OnPadRight        += _onPadRightPressed  = () => PadRight.SetState(true);
+        inputHandler.OnPadRightCanceled += _onPadRightCanceled = () => PadRight.SetState(false);
+        inputHandler.OnPadUp           += _onPadUpPressed    = () => PadUp.SetState(true);
+        inputHandler.OnPadUpCanceled   += _onPadUpCanceled   = () => PadUp.SetState(false);
+        inputHandler.OnPadDown         += _onPadDownPressed  = () => PadDown.SetState(true);
+        inputHandler.OnPadDownCanceled += _onPadDownCanceled = () => PadDown.SetState(false);
+
+        // Left Stick Directions
+        inputHandler.OnLeftStickLeft         += _onLeftStickLeftPressed    = () => LeftStickLeft.SetState(true);
+        inputHandler.OnLeftStickLeftCanceled += _onLeftStickLeftCanceled   = () => LeftStickLeft.SetState(false);
+        inputHandler.OnLeftStickRight         += _onLeftStickRightPressed  = () => LeftStickRight.SetState(true);
+        inputHandler.OnLeftStickRightCanceled += _onLeftStickRightCanceled = () => LeftStickRight.SetState(false);
+        inputHandler.OnLeftStickUp            += _onLeftStickUpPressed     = () => LeftStickUp.SetState(true);
+        inputHandler.OnLeftStickUpCanceled    += _onLeftStickUpCanceled    = () => LeftStickUp.SetState(false);
+        inputHandler.OnLeftStickDown          += _onLeftStickDownPressed   = () => LeftStickDown.SetState(true);
+        inputHandler.OnLeftStickDownCanceled  += _onLeftStickDownCanceled  = () => LeftStickDown.SetState(false);
+
+        // Right Stick Directions
+        inputHandler.OnRightStickLeft          += _onRightStickLeftPressed   = () => RightStickLeft.SetState(true);
+        inputHandler.OnRightStickLeftCanceled  += _onRightStickLeftCanceled  = () => RightStickLeft.SetState(false);
+        inputHandler.OnRightStickRight         += _onRightStickRightPressed  = () => RightStickRight.SetState(true);
+        inputHandler.OnRightStickRightCanceled += _onRightStickRightCanceled = () => RightStickRight.SetState(false);
+        inputHandler.OnRightStickUp            += _onRightStickUpPressed     = () => RightStickUp.SetState(true);
+        inputHandler.OnRightStickUpCanceled    += _onRightStickUpCanceled    = () => RightStickUp.SetState(false);
+        inputHandler.OnRightStickDown          += _onRightStickDownPressed   = () => RightStickDown.SetState(true);
+        inputHandler.OnRightStickDownCanceled  += _onRightStickDownCanceled  = () => RightStickDown.SetState(false);
+
+        // Start / Select
+        inputHandler.OnButtonStart          += _onButtonStartPressed   = () => ButtonStart.SetState(true);
+        inputHandler.OnButtonStartCanceled  += _onButtonStartCanceled  = () => ButtonStart.SetState(false);
+        inputHandler.OnButtonSelect         += _onButtonSelectPressed  = () => ButtonSelect.SetState(true);
+        inputHandler.OnButtonSelectCanceled += _onButtonSelectCanceled = () => ButtonSelect.SetState(false);
+
+        // Trigger Presses
+        inputHandler.OnLeftTriggerPressed  += _onLeftTriggerPressed  = () => LeftTriggerPressed.SetState(true);
+        inputHandler.OnLeftTriggerReleased += _onLeftTriggerReleased = () => LeftTriggerPressed.SetState(false);
+        inputHandler.OnRightTriggerPressed  += _onRightTriggerPressed  = () => RightTriggerPressed.SetState(true);
+        inputHandler.OnRightTriggerReleased += _onRightTriggerReleased = () => RightTriggerPressed.SetState(false);
     }
 
     private void OnDisable()
@@ -167,69 +196,69 @@ public class InputManager : MonoBehaviour
         inputHandler.OnRightTrigger -= HandleRightTrigger;
         inputHandler.OnRightTriggerCanceled -= HandleRightTriggerCanceled;
         
-        // Unsubscribe from button events - Face Buttons
-        inputHandler.OnButtonSouth -= () => ButtonSouth.SetState(true);
-        inputHandler.OnButtonSouthCanceled -= () => ButtonSouth.SetState(false);
-        inputHandler.OnButtonNorth -= () => ButtonNorth.SetState(true);
-        inputHandler.OnButtonNorthCanceled -= () => ButtonNorth.SetState(false);
-        inputHandler.OnButtonEast -= () => ButtonEast.SetState(true);
-        inputHandler.OnButtonEastCanceled -= () => ButtonEast.SetState(false);
-        inputHandler.OnButtonWest -= () => ButtonWest.SetState(true);
-        inputHandler.OnButtonWestCanceled -= () => ButtonWest.SetState(false);
-        
-        // Unsubscribe from button events - Shoulders
-        inputHandler.OnLeftShoulder -= () => LeftShoulder.SetState(true);
-        inputHandler.OnLeftShoulderCanceled -= () => LeftShoulder.SetState(false);
-        inputHandler.OnRightShoulder -= () => RightShoulder.SetState(true);
-        inputHandler.OnRightShoulderCanceled -= () => RightShoulder.SetState(false);
-        
-        // Unsubscribe from button events - Stick Presses
-        inputHandler.OnLeftStickPress -= () => LeftStickPress.SetState(true);
-        inputHandler.OnLeftStickPressCanceled -= () => LeftStickPress.SetState(false);
-        inputHandler.OnRightStickPress -= () => RightStickPress.SetState(true);
-        inputHandler.OnRightStickPressCanceled -= () => RightStickPress.SetState(false);
-        
-        // Unsubscribe from button events - D-Pad
-        inputHandler.OnPadLeft -= () => PadLeft.SetState(true);
-        inputHandler.OnPadLeftCanceled -= () => PadLeft.SetState(false);
-        inputHandler.OnPadRight -= () => PadRight.SetState(true);
-        inputHandler.OnPadRightCanceled -= () => PadRight.SetState(false);
-        inputHandler.OnPadUp -= () => PadUp.SetState(true);
-        inputHandler.OnPadUpCanceled -= () => PadUp.SetState(false);
-        inputHandler.OnPadDown -= () => PadDown.SetState(true);
-        inputHandler.OnPadDownCanceled -= () => PadDown.SetState(false);
-        
-        // Unsubscribe from button events - Left Stick Directions
-        inputHandler.OnLeftStickLeft -= () => LeftStickLeft.SetState(true);
-        inputHandler.OnLeftStickLeftCanceled -= () => LeftStickLeft.SetState(false);
-        inputHandler.OnLeftStickRight -= () => LeftStickRight.SetState(true);
-        inputHandler.OnLeftStickRightCanceled -= () => LeftStickRight.SetState(false);
-        inputHandler.OnLeftStickUp -= () => LeftStickUp.SetState(true);
-        inputHandler.OnLeftStickUpCanceled -= () => LeftStickUp.SetState(false);
-        inputHandler.OnLeftStickDown -= () => LeftStickDown.SetState(true);
-        inputHandler.OnLeftStickDownCanceled -= () => LeftStickDown.SetState(false);
-        
-        // Unsubscribe from button events - Right Stick Directions
-        inputHandler.OnRightStickLeft -= () => RightStickLeft.SetState(true);
-        inputHandler.OnRightStickLeftCanceled -= () => RightStickLeft.SetState(false);
-        inputHandler.OnRightStickRight -= () => RightStickRight.SetState(true);
-        inputHandler.OnRightStickRightCanceled -= () => RightStickRight.SetState(false);
-        inputHandler.OnRightStickUp -= () => RightStickUp.SetState(true);
-        inputHandler.OnRightStickUpCanceled -= () => RightStickUp.SetState(false);
-        inputHandler.OnRightStickDown -= () => RightStickDown.SetState(true);
-        inputHandler.OnRightStickDownCanceled -= () => RightStickDown.SetState(false);
-        
-        // Unsubscribe from button events - Start/Select
-        inputHandler.OnButtonStart -= () => ButtonStart.SetState(true);
-        inputHandler.OnButtonStartCanceled -= () => ButtonStart.SetState(false);
-        inputHandler.OnButtonSelect -= () => ButtonSelect.SetState(true);
-        inputHandler.OnButtonSelectCanceled -= () => ButtonSelect.SetState(false);
-        
-        // Unsubscribe from button events - Trigger Presses
-        inputHandler.OnLeftTriggerPressed -= () => LeftTriggerPressed.SetState(true);
-        inputHandler.OnLeftTriggerReleased -= () => LeftTriggerPressed.SetState(false);
-        inputHandler.OnRightTriggerPressed -= () => RightTriggerPressed.SetState(true);
-        inputHandler.OnRightTriggerReleased -= () => RightTriggerPressed.SetState(false);
+        // Unsubscribe button delegates - Face Buttons
+        inputHandler.OnButtonSouth         -= _onButtonSouthPressed;
+        inputHandler.OnButtonSouthCanceled -= _onButtonSouthCanceled;
+        inputHandler.OnButtonNorth         -= _onButtonNorthPressed;
+        inputHandler.OnButtonNorthCanceled -= _onButtonNorthCanceled;
+        inputHandler.OnButtonEast          -= _onButtonEastPressed;
+        inputHandler.OnButtonEastCanceled  -= _onButtonEastCanceled;
+        inputHandler.OnButtonWest          -= _onButtonWestPressed;
+        inputHandler.OnButtonWestCanceled  -= _onButtonWestCanceled;
+
+        // Shoulders
+        inputHandler.OnLeftShoulder          -= _onLeftShoulderPressed;
+        inputHandler.OnLeftShoulderCanceled  -= _onLeftShoulderCanceled;
+        inputHandler.OnRightShoulder         -= _onRightShoulderPressed;
+        inputHandler.OnRightShoulderCanceled -= _onRightShoulderCanceled;
+
+        // Stick Presses
+        inputHandler.OnLeftStickPress          -= _onLeftStickPressPressed;
+        inputHandler.OnLeftStickPressCanceled  -= _onLeftStickPressCanceled;
+        inputHandler.OnRightStickPress         -= _onRightStickPressPressed;
+        inputHandler.OnRightStickPressCanceled -= _onRightStickPressCanceled;
+
+        // D-Pad
+        inputHandler.OnPadLeft         -= _onPadLeftPressed;
+        inputHandler.OnPadLeftCanceled -= _onPadLeftCanceled;
+        inputHandler.OnPadRight         -= _onPadRightPressed;
+        inputHandler.OnPadRightCanceled -= _onPadRightCanceled;
+        inputHandler.OnPadUp            -= _onPadUpPressed;
+        inputHandler.OnPadUpCanceled    -= _onPadUpCanceled;
+        inputHandler.OnPadDown          -= _onPadDownPressed;
+        inputHandler.OnPadDownCanceled  -= _onPadDownCanceled;
+
+        // Left Stick Directions
+        inputHandler.OnLeftStickLeft          -= _onLeftStickLeftPressed;
+        inputHandler.OnLeftStickLeftCanceled  -= _onLeftStickLeftCanceled;
+        inputHandler.OnLeftStickRight         -= _onLeftStickRightPressed;
+        inputHandler.OnLeftStickRightCanceled -= _onLeftStickRightCanceled;
+        inputHandler.OnLeftStickUp            -= _onLeftStickUpPressed;
+        inputHandler.OnLeftStickUpCanceled    -= _onLeftStickUpCanceled;
+        inputHandler.OnLeftStickDown          -= _onLeftStickDownPressed;
+        inputHandler.OnLeftStickDownCanceled  -= _onLeftStickDownCanceled;
+
+        // Right Stick Directions
+        inputHandler.OnRightStickLeft          -= _onRightStickLeftPressed;
+        inputHandler.OnRightStickLeftCanceled  -= _onRightStickLeftCanceled;
+        inputHandler.OnRightStickRight         -= _onRightStickRightPressed;
+        inputHandler.OnRightStickRightCanceled -= _onRightStickRightCanceled;
+        inputHandler.OnRightStickUp            -= _onRightStickUpPressed;
+        inputHandler.OnRightStickUpCanceled    -= _onRightStickUpCanceled;
+        inputHandler.OnRightStickDown          -= _onRightStickDownPressed;
+        inputHandler.OnRightStickDownCanceled  -= _onRightStickDownCanceled;
+
+        // Start / Select
+        inputHandler.OnButtonStart          -= _onButtonStartPressed;
+        inputHandler.OnButtonStartCanceled  -= _onButtonStartCanceled;
+        inputHandler.OnButtonSelect         -= _onButtonSelectPressed;
+        inputHandler.OnButtonSelectCanceled -= _onButtonSelectCanceled;
+
+        // Trigger Presses
+        inputHandler.OnLeftTriggerPressed  -= _onLeftTriggerPressed;
+        inputHandler.OnLeftTriggerReleased -= _onLeftTriggerReleased;
+        inputHandler.OnRightTriggerPressed  -= _onRightTriggerPressed;
+        inputHandler.OnRightTriggerReleased -= _onRightTriggerReleased;
         
         // Reset all action states when disabling
         ResetAllInputStates();
