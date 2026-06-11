@@ -37,7 +37,6 @@ The system is structured in four layers:
 
 Example scripts (`InputJumpExample`, `InputMoveExample`, `InputEventSubscriptionExample`) demonstrate how to consume the system in gameplay code.
 
-# UML
 ![BMS-InputManager-UML](https://github.com/user-attachments/assets/fe42eced-0880-4b6b-a046-cf969ce0eba8)
 
 ---
@@ -93,7 +92,7 @@ public class InputDebugger : MonoBehaviour
 }
 ```
 
-See `InputEventSubscriptionExample.cs` for a complete reference covering all inputs.
+See [InputEventSubscriptionExample.cs](Scripts/Examples/InputEventSubscriptionExample.cs) for a complete reference covering all inputs.
 
 ### 4. Using InputManager for Frame-Precise State
 
@@ -114,10 +113,6 @@ private void Update()
         ReleaseJump();
 }
 ```
-
-### 5. Using the Gamepad Input Visualiser
-
-A pre-configured scene, **`Scene-GamepadInputVisualiser`**, is included to display gamepad inputs in real-time. Open this scene and run the game to see visual feedback of gamepad inputs.
 
 ---
 
