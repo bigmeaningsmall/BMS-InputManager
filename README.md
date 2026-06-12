@@ -38,7 +38,7 @@ The system is structured in four layers:
 Example scripts (`InputJumpExample`, `InputMoveExample`, `InputEventSubscriptionExample`) demonstrate how to consume the system in gameplay code.
 
 # UML
-![BMS-InputManager-UML](https://github.com/user-attachments/assets/fe42eced-0880-4b6b-a046-cf969ce0eba8)
+UML to be updated!
 
 ---
 
