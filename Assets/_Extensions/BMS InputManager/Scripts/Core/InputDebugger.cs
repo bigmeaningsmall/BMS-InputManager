@@ -1,5 +1,10 @@
 using UnityEngine;
 
+/// <summary>
+/// This is a handy way to see how to use all inputs
+/// you can see how to subscribe to the events and how to setup the event receiver functions
+/// </summary>
+
 public class InputDebugger : MonoBehaviour
 {
     public InputHandler inputHandler; // Reference to the inputHandler script
