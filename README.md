@@ -72,28 +72,37 @@ Ensure you have the **Unity Input System** package installed:
 
 ### 3. Subscribing to Input Events
 
-Subscribe to events from `InputHandler` in `OnEnable` and unsubscribe in `OnDisable`.
+`InputHandler` events are **instance** events, so subscribe to a specific `InputHandler` reference
+(not the type). Always use **named** handler methods — subscribing with a lambda and trying to `-=`
+it later silently fails to unsubscribe and leaks the handler.
 
 ```csharp
 using UnityEngine;
 
-public class InputDebugger : MonoBehaviour
+public class MyInputReceiver : MonoBehaviour
 {
+    [SerializeField] private InputHandler inputHandler; // assign the player's InputHandler
+
     private void OnEnable()
     {
-        InputHandler.OnButtonSouth += () => Debug.Log("Button South Pressed");
-        InputHandler.OnLeftStick += (Vector2 input) => Debug.Log($"Left Stick: {input}");
+        inputHandler.OnButtonSouth += HandleButtonSouth;
+        inputHandler.OnLeftStick += HandleLeftStick;
     }
 
     private void OnDisable()
     {
-        InputHandler.OnButtonSouth -= () => Debug.Log("Button South Pressed");
-        InputHandler.OnLeftStick -= (Vector2 input) => Debug.Log($"Left Stick: {input}");
+        // Same named methods, so -= actually removes them.
+        inputHandler.OnButtonSouth -= HandleButtonSouth;
+        inputHandler.OnLeftStick -= HandleLeftStick;
     }
+
+    private void HandleButtonSouth() => Debug.Log("Button South Pressed");
+    private void HandleLeftStick(Vector2 input) => Debug.Log($"Left Stick: {input}");
 }
 ```
 
-See `InputEventSubscriptionExample.cs` for a complete reference covering all inputs.
+See `InputEventSubscriptionExample.cs` for a complete reference covering all inputs, and
+`InputUsageStylesExample.cs` for events and polling side by side.
 
 ### 4. Using InputManager for Frame-Precise State
 
@@ -145,6 +154,49 @@ the digital stick directions, the trigger presses, and start/select. See `InputI
 ### 6. Using the Gamepad Input Visualiser
 
 A pre-configured scene, **`Scene-GamepadInputVisualiser`**, is included to display gamepad inputs in real-time. Open this scene and run the game to see visual feedback of gamepad inputs.
+
+---
+
+## Events vs Polling — which to use
+
+The asset gives you two ways to read input. They overlap, but they aren't equal in capability.
+
+| | **Events** (`InputHandler`) | **Polling** (`InputManager` / `InputActionState`) |
+|---|---|---|
+| Style | "Push" — subscribe and react | "Pull" — read every frame in `Update` |
+| Covers | Analog values, pressed, canceled/released | Pressed, Held, Released **+** Tap, Hold, HoldActive, SlowTap, MultiTap |
+| Interactions (tap/hold/…) | ❌ not available | ✅ only here |
+| Lifecycle | Must subscribe/unsubscribe (or leak) | Nothing to manage |
+| Best for | Discrete, decoupled, UI-style reactions | Continuous logic and anything using interactions |
+
+**Rule of thumb:** default to **polling** for gameplay entities — it does everything and can't leak —
+and use **events** for discrete, decoupled, or UI reactions where "push" is cleaner. Mixing both is
+perfectly fine; pick per use-case. See `InputUsageStylesExample.cs`.
+
+**Gotchas:**
+- **Poll edges in `Update`, not `FixedUpdate`.** `Pressed()`/`Released()`/`Tap()` etc. edge-detect
+  against the frame count; `FixedUpdate` can run zero or several times per frame and would miss or
+  double them. For physics, read/cache the input in `Update` and apply forces in `FixedUpdate`.
+- **Don't do physics inside an event handler** — events fire at input-processing time, not during your
+  game loop. Cache the value (see the stick pattern in the examples) and apply it in your loop.
+- **Events need disciplined unsubscribe** in `OnDisable`, using named methods (not lambdas).
+
+## Local Multiplayer
+
+The asset is local-multiplayer-safe — `InputHandler`'s events are **per-instance** and it holds no
+static state, so each player is fully independent.
+
+- Give **each player prefab** its own `PlayerInput` + `InputHandler` (+ optional `InputManager`).
+  Unity's `PlayerInput` hands each player a separate copy of the actions asset, paired to that
+  player's device, so inputs never cross over.
+- Subscribe to **that player's** `InputHandler` instance — never a global/static reference. Per-player
+  gameplay scripts on the prefab can auto-wire to their own handler with `GetComponent` in `Awake`.
+- See `Scene-LocalMultiplayer` and `Scene-LocalMultiplayerSplitScreen`, which use Unity's
+  `PlayerInputManager` to spawn players per device.
+
+> **Planned improvement:** a `PlayerInputManager` bridge that exposes join/leave events and a
+> per-player registry to formalise joining/leaving. Not included yet — today you wire the player
+> prefab (`PlayerInput` + `InputHandler`) and `PlayerInputManager` handles the spawning.
 
 ---
 

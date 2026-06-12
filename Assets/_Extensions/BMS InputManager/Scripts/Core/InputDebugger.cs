@@ -5,10 +5,13 @@ using UnityEngine;
 /// you can see how to subscribe to the events and how to setup the event receiver functions
 /// </summary>
 
+[RequireComponent(typeof(InputHandler))]
+[RequireComponent(typeof(InputManager))]
 public class InputDebugger : MonoBehaviour
 {
-    public InputHandler inputHandler; // Reference to the inputHandler script - source of the live events
-    public InputManager inputManager; // Reference to the InputManager - source of the polled interaction states
+    // Both live on the same GameObject (enforced by RequireComponent) and are fetched in Awake.
+    private InputHandler inputHandler; // source of the live events
+    private InputManager inputManager; // source of the polled interaction states
 
     [SerializeField] private bool debugAnalogInputs = true;  // Toggle for analog input debug messages (events)
     [SerializeField] private bool debugButtonInputs = true;  // Toggle for button pressed/canceled messages (events)
@@ -144,15 +147,9 @@ public class InputDebugger : MonoBehaviour
 
     void Awake()
     {
-        if(gameObject.GetComponent<InputHandler>() && inputHandler == null)
-        {
-            inputHandler = gameObject.GetComponent<InputHandler>();
-        }
-
-        if(gameObject.GetComponent<InputManager>() && inputManager == null)
-        {
-            inputManager = gameObject.GetComponent<InputManager>();
-        }
+        // Both required on the same GameObject by RequireComponent.
+        inputHandler = GetComponent<InputHandler>();
+        inputManager = GetComponent<InputManager>();
     }
 
     // Name/state pairs for every button-style input, built once so Update can iterate them.

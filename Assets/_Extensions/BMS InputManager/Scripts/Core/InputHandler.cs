@@ -63,7 +63,8 @@ public class InputHandler : MonoBehaviour
     public event Action OnButtonSelectCanceled;
 
     // Reference to the Input Actions asset
-    [SerializeField] private PlayerInput playerInput;
+    // [SerializeField] 
+    private PlayerInput playerInput;
     private InputActionAsset inputActions;
 
     // Cached input actions

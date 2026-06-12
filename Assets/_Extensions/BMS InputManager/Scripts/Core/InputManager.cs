@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(InputHandler))]
 public class InputManager : MonoBehaviour
 {
-    public InputHandler inputHandler; // Reference to the InputHandler script
+    // InputHandler is required on the same GameObject and fetched in Awake - no need to assign it.
+    private InputHandler inputHandler;
 
     #region Cached Button Delegates
     private Action _onButtonSouthPressed,      _onButtonSouthCanceled;
@@ -98,11 +100,8 @@ public class InputManager : MonoBehaviour
     
     private void Awake()
     {
-        // Auto-assign InputHandler if it's on the same GameObject
-        if(gameObject.GetComponent<InputHandler>() && inputHandler == null)
-        {
-            inputHandler = gameObject.GetComponent<InputHandler>();
-        }
+        // InputHandler is guaranteed on the same GameObject by RequireComponent.
+        inputHandler = GetComponent<InputHandler>();
     }
     
     private void OnEnable()

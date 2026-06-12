@@ -7,9 +7,8 @@
     <list default="true" id="c0d0fdf1-dd3f-492d-9a69-57cf52599fa6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BMS-InputManager/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BMS-InputManager/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/Scripts/Core/InputActionState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/Scripts/Core/InputActionState.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/Scripts/Core/InputDebugger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/Scripts/Core/InputDebugger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/Scripts/Core/InputVisualiser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/Scripts/Core/InputVisualiser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/Scripts/Core/InputManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Extensions/BMS InputManager/Scripts/Core/InputManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -121,7 +120,7 @@
       <workItem from="1738069552331" duration="7222000" />
       <workItem from="1738100970377" duration="1259000" />
       <workItem from="1781214079978" duration="2719000" />
-      <workItem from="1781268877434" duration="2673000" />
+      <workItem from="1781268877434" duration="5292000" />
     </task>
     <servers />
   </component>
