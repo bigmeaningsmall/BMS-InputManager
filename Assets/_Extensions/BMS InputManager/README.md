@@ -114,6 +114,34 @@ private void Update()
 }
 ```
 
+### 5. Interactions (Tap / Hold / Slow Tap / Multi-Tap)
+
+Every button-style `InputActionState` on `InputManager` also exposes higher-level interactions,
+so you can just poll the ones you need from `Update`:
+
+| Method | Returns true when |
+|---|---|
+| `Hold(duration = default)` | **Once**, after the button has been held past the hold time |
+| `HoldActive(duration = default)` | **Every frame** while held past the hold time (charge-while-held) |
+| `Tap(maxDuration = default)` | On release of a quick press |
+| `SlowTap(minDuration = default)` | On release of a long press |
+| `MultiTap(count = 2, maxTapDuration = default)` | When `count` quick taps occur in succession (e.g. double-tap) |
+
+```csharp
+private void Update()
+{
+    if (_inputManager.ButtonSouth.Tap())      Confirm();
+    if (_inputManager.ButtonSouth.Hold())     OpenRadialMenu();   // one-shot
+    if (_inputManager.ButtonSouth.MultiTap(2)) Dash();            // double-tap
+}
+```
+
+Default timings are read from **Project Settings → Input System Package** (tap, hold, slow tap and
+multi-tap delay), so they stay consistent with Unity's own interactions; each method also accepts an
+optional override. These apply to all button states — face buttons, shoulders, stick presses, d-pad,
+the digital stick directions, the trigger presses, and start/select. See
+[InputInteractionExample.cs](Scripts/Examples/InputInteractionExample.cs).
+
 ---
 
 ## Events Reference

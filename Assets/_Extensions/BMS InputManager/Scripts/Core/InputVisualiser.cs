@@ -7,7 +7,8 @@ public class InputVisualiser : MonoBehaviour
 {
     [Header("Input Handler Reference")]
     public InputHandler inputHandler; // Reference to the inputHandler script
-    
+    public InputManager inputManager; // Reference to the InputManager - used to demo the polled interaction API
+
     [Header("Colors")]
     [SerializeField] public Color inactiveColor;
     [SerializeField] public Color activeColor;
@@ -46,18 +47,13 @@ public class InputVisualiser : MonoBehaviour
     public TextMeshProUGUI leftTriggerPressure;
     public TextMeshProUGUI rightTriggerPressure;
     
-    // Trigger status lifecycle shown in the UI: Pressed -> Held -> Released -> reset to idle.
-    // Driven by the digital trigger press/release events plus a timer in Update, so it doesn't
-    // depend on the ordering between the digital Released and the analog Canceled events.
-    private enum TriggerState { Idle, Pressed, Held, Released }
-    private TriggerState leftTriggerState = TriggerState.Idle;
-    private TriggerState rightTriggerState = TriggerState.Idle;
-    private float leftTriggerStateTime;
-    private float rightTriggerStateTime;
-
+    // Trigger status (Pressed -> Held -> Released -> "- - -") is driven in Update by polling the
+    // InputManager's InputActionState for each trigger - a live example of the reusable interaction
+    // API (.Pressed()/.HoldActive()/.Released()), rather than a bespoke state machine in here.
     [Header("Trigger Status Timing")]
-    [SerializeField] private float pressedDisplayTime = 0.15f; // how long "Pressed" shows before "Held"
     [SerializeField] private float releasedResetTime = 1.0f;   // how long "Released" shows before reset
+    private float leftTriggerReleaseShownTime = -1f;
+    private float rightTriggerReleaseShownTime = -1f;
 
     #region inputHandler Events Subscription
     private void OnEnable()
@@ -71,8 +67,6 @@ public class InputVisualiser : MonoBehaviour
         inputHandler.OnButtonEast += ButtonEast;
         inputHandler.OnLeftTrigger += LeftTrigger;
         inputHandler.OnRightTrigger += RightTrigger;
-        inputHandler.OnLeftTriggerPressed += LeftTriggerPress;
-        inputHandler.OnRightTriggerPressed += RightTriggerPress;
         inputHandler.OnLeftShoulder += LeftShoulder;
         inputHandler.OnRightShoulder += RightShoulder;
         inputHandler.OnLeftStickPress += LeftStickPress;
@@ -101,8 +95,6 @@ public class InputVisualiser : MonoBehaviour
         inputHandler.OnButtonEastCanceled += ButtonEastCanceled;
         inputHandler.OnLeftTriggerCanceled += LeftTriggerCanceled;
         inputHandler.OnRightTriggerCanceled += RightTriggerCanceled;
-        inputHandler.OnLeftTriggerReleased += LeftTriggerReleased;
-        inputHandler.OnRightTriggerReleased += RightTriggerReleased;
         inputHandler.OnLeftShoulderCanceled += LeftShoulderCanceled;
         inputHandler.OnRightShoulderCanceled += RightShoulderCanceled;
         inputHandler.OnLeftStickPressCanceled += LeftStickPressCanceled;
@@ -134,8 +126,6 @@ public class InputVisualiser : MonoBehaviour
         inputHandler.OnButtonEast -= ButtonEast;
         inputHandler.OnLeftTrigger -= LeftTrigger;
         inputHandler.OnRightTrigger -= RightTrigger;
-        inputHandler.OnLeftTriggerPressed -= LeftTriggerPress;
-        inputHandler.OnRightTriggerPressed -= RightTriggerPress;
         inputHandler.OnLeftShoulder -= LeftShoulder;
         inputHandler.OnRightShoulder -= RightShoulder;
         inputHandler.OnLeftStickPress -= LeftStickPress;
@@ -164,8 +154,6 @@ public class InputVisualiser : MonoBehaviour
         inputHandler.OnButtonEastCanceled -= ButtonEastCanceled;
         inputHandler.OnLeftTriggerCanceled -= LeftTriggerCanceled;
         inputHandler.OnRightTriggerCanceled -= RightTriggerCanceled;
-        inputHandler.OnLeftTriggerReleased -= LeftTriggerReleased;
-        inputHandler.OnRightTriggerReleased -= RightTriggerReleased;
         inputHandler.OnLeftShoulderCanceled -= LeftShoulderCanceled;
         inputHandler.OnRightShoulderCanceled -= RightShoulderCanceled;
         inputHandler.OnLeftStickPressCanceled -= LeftStickPressCanceled;
@@ -193,7 +181,12 @@ public class InputVisualiser : MonoBehaviour
         {
             inputHandler = gameObject.GetComponent<InputHandler>();
         }
-        
+
+        if(gameObject.GetComponent<InputManager>() && inputManager == null)
+        {
+            inputManager = gameObject.GetComponent<InputManager>();
+        }
+
         SetGraphics();
         
         initialLeftStickPosition = leftStick.transform.localPosition;
@@ -202,48 +195,36 @@ public class InputVisualiser : MonoBehaviour
 
     private void Update()
     {
-        // Advance the trigger status lifecycle: Pressed auto-promotes to Held after a moment,
-        // and Released auto-resets to idle ("- - -") after the reset delay.
-        UpdateTriggerStatus(ref leftTriggerState, ref leftTriggerStateTime, leftTriggerStatus);
-        UpdateTriggerStatus(ref rightTriggerState, ref rightTriggerStateTime, rightTriggerStatus);
-    }
-
-    private void UpdateTriggerStatus(ref TriggerState state, ref float stateTime, TextMeshProUGUI label)
-    {
-        switch (state)
+        // Example usage of the reusable interaction API: poll each trigger's InputActionState and
+        // show Pressed -> Held -> Released, then clear back to "- - -" a moment after release.
+        if (inputManager != null)
         {
-            case TriggerState.Pressed:
-                if (Time.time - stateTime >= pressedDisplayTime)
-                {
-                    state = TriggerState.Held;
-                    stateTime = Time.time;
-                    label.text = "Held";
-                }
-                break;
-
-            case TriggerState.Released:
-                if (Time.time - stateTime >= releasedResetTime)
-                {
-                    state = TriggerState.Idle;
-                    stateTime = Time.time;
-                    label.text = "- - -";
-                }
-                break;
+            UpdateTriggerStatus(inputManager.LeftTriggerPressed, leftTriggerStatus, ref leftTriggerReleaseShownTime);
+            UpdateTriggerStatus(inputManager.RightTriggerPressed, rightTriggerStatus, ref rightTriggerReleaseShownTime);
         }
     }
 
-    private void SetLeftTriggerState(TriggerState state, string label)
+    private void UpdateTriggerStatus(InputActionState trigger, TextMeshProUGUI label, ref float releaseShownTime)
     {
-        leftTriggerState = state;
-        leftTriggerStateTime = Time.time;
-        leftTriggerStatus.text = label;
-    }
-
-    private void SetRightTriggerState(TriggerState state, string label)
-    {
-        rightTriggerState = state;
-        rightTriggerStateTime = Time.time;
-        rightTriggerStatus.text = label;
+        if (trigger.Pressed())
+        {
+            label.text = "Pressed";
+            releaseShownTime = -1f;
+        }
+        else if (trigger.Released())
+        {
+            label.text = "Released";
+            releaseShownTime = Time.time;
+        }
+        else if (trigger.HoldActive())
+        {
+            label.text = "Held";
+        }
+        else if (releaseShownTime >= 0f && Time.time - releaseShownTime >= releasedResetTime)
+        {
+            label.text = "- - -";
+            releaseShownTime = -1f;
+        }
     }
     
     private void SetGraphics()
@@ -340,16 +321,6 @@ public class InputVisualiser : MonoBehaviour
         rightTriggerPressure.text = input.ToString("F2");
     }
     
-    private void LeftTriggerPress()
-    {
-        SetLeftTriggerState(TriggerState.Pressed, "Pressed");
-    }
-
-    private void RightTriggerPress()
-    {
-        SetRightTriggerState(TriggerState.Pressed, "Pressed");
-    }
-
     private void LeftShoulder()
     {
         btnLeftShoulder.color = activeColor;
@@ -495,16 +466,6 @@ public class InputVisualiser : MonoBehaviour
         rightTriggerPressure.text = "0.00";
     }
 
-    private void LeftTriggerReleased()
-    {
-        SetLeftTriggerState(TriggerState.Released, "Released");
-    }
-
-    private void RightTriggerReleased()
-    {
-        SetRightTriggerState(TriggerState.Released, "Released");
-    }
-    
     private void LeftShoulderCanceled()
     {
         btnLeftShoulder.color = inactiveColor;

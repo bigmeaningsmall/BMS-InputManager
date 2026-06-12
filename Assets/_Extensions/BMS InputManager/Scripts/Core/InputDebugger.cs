@@ -7,10 +7,12 @@ using UnityEngine;
 
 public class InputDebugger : MonoBehaviour
 {
-    public InputHandler inputHandler; // Reference to the inputHandler script
-    
-    [SerializeField] private bool debugAnalogInputs = true; // Toggle for analog input debug messages
-    [SerializeField] private bool debugButtonInputs = true; // Toggle for button input debug messages
+    public InputHandler inputHandler; // Reference to the inputHandler script - source of the live events
+    public InputManager inputManager; // Reference to the InputManager - source of the polled interaction states
+
+    [SerializeField] private bool debugAnalogInputs = true;  // Toggle for analog input debug messages (events)
+    [SerializeField] private bool debugButtonInputs = true;  // Toggle for button pressed/canceled messages (events)
+    [SerializeField] private bool debugInteractions = true;  // Toggle for Tap/Hold/SlowTap/MultiTap messages (polled)
     
     #region inputHandler Events Subscription
     private void OnEnable()
@@ -147,8 +149,69 @@ public class InputDebugger : MonoBehaviour
             inputHandler = gameObject.GetComponent<InputHandler>();
         }
 
+        if(gameObject.GetComponent<InputManager>() && inputManager == null)
+        {
+            inputManager = gameObject.GetComponent<InputManager>();
+        }
     }
-    
+
+    // Name/state pairs for every button-style input, built once so Update can iterate them.
+    private (string name, InputActionState state)[] buttonStates;
+
+    private void Start()
+    {
+        BuildButtonStateList();
+    }
+
+    private void BuildButtonStateList()
+    {
+        if (inputManager == null) return;
+
+        buttonStates = new (string, InputActionState)[]
+        {
+            ("ButtonSouth", inputManager.ButtonSouth),
+            ("ButtonNorth", inputManager.ButtonNorth),
+            ("ButtonEast", inputManager.ButtonEast),
+            ("ButtonWest", inputManager.ButtonWest),
+            ("LeftShoulder", inputManager.LeftShoulder),
+            ("RightShoulder", inputManager.RightShoulder),
+            ("LeftStickPress", inputManager.LeftStickPress),
+            ("RightStickPress", inputManager.RightStickPress),
+            ("PadLeft", inputManager.PadLeft),
+            ("PadRight", inputManager.PadRight),
+            ("PadUp", inputManager.PadUp),
+            ("PadDown", inputManager.PadDown),
+            ("LeftStickLeft", inputManager.LeftStickLeft),
+            ("LeftStickRight", inputManager.LeftStickRight),
+            ("LeftStickUp", inputManager.LeftStickUp),
+            ("LeftStickDown", inputManager.LeftStickDown),
+            ("RightStickLeft", inputManager.RightStickLeft),
+            ("RightStickRight", inputManager.RightStickRight),
+            ("RightStickUp", inputManager.RightStickUp),
+            ("RightStickDown", inputManager.RightStickDown),
+            ("ButtonStart", inputManager.ButtonStart),
+            ("ButtonSelect", inputManager.ButtonSelect),
+            ("LeftTriggerPressed", inputManager.LeftTriggerPressed),
+            ("RightTriggerPressed", inputManager.RightTriggerPressed),
+        };
+    }
+
+    // The events above cover analog values and pressed/canceled. The interactions
+    // (Tap/Hold/SlowTap/MultiTap) must be POLLED from the InputActionState every frame,
+    // which is what this does - making the debugger a comprehensive trace of every input.
+    private void Update()
+    {
+        if (!debugInteractions || buttonStates == null) return;
+
+        foreach (var (name, state) in buttonStates)
+        {
+            if (state.Tap())       Debug.Log($"{name}: Tap");
+            if (state.SlowTap())   Debug.Log($"{name}: SlowTap");
+            if (state.Hold())      Debug.Log($"{name}: Hold");
+            if (state.MultiTap(2)) Debug.Log($"{name}: MultiTap (double)");
+        }
+    }
+
     private void DebugLog(string message, bool isAnalog)
     {
         if ((isAnalog && debugAnalogInputs) || (!isAnalog && debugButtonInputs))
