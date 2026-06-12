@@ -183,6 +183,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerInputManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8426823722480812585, guid: 6e8764d0800110342b913a50a859f03f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -203,11 +207,11 @@ GameObject:
   - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &330585544
 AudioListener:
   m_ObjectHideFlags: 0
@@ -342,7 +346,7 @@ MonoBehaviour:
   ShowCameraFrustum: 1
   IgnoreTimeScale: 0
   WorldUpOverride: {fileID: 0}
-  ChannelMask: -1
+  ChannelMask: 0
   UpdateMethod: 2
   BlendUpdateMethod: 1
   LensModeOverride:
@@ -856,7 +860,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2100992878
 MonoBehaviour:
   m_ObjectHideFlags: 0

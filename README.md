@@ -2,7 +2,7 @@
 
 ## Unity Event-Based Input Manager
 
-**Version: v1.1.0**
+**Version: v1.2.0**
 
 This repository provides an event-driven input management system for Unity using the **Unity Input System**. It simplifies input handling by exposing events for various gamepad controls, allowing developers to subscribe and react to inputs efficiently.
 
@@ -193,6 +193,37 @@ static state, so each player is fully independent.
   gameplay scripts on the prefab can auto-wire to their own handler with `GetComponent` in `Awake`.
 - See `Scene-LocalMultiplayer` and `Scene-LocalMultiplayerSplitScreen`, which use Unity's
   `PlayerInputManager` to spawn players per device.
+
+### Cameras & split-screen
+
+This asset handles **input only** — it does not manage cameras. For split-screen, each instanced
+player needs its **own** camera, wired manually on the player prefab:
+
+- Put a **Camera + `CinemachineBrain`** on each player prefab (not one shared Main Camera). A single
+  Brain only drives one Unity camera, so N players need N cameras, each with its own Brain.
+- Add a **Cinemachine camera (vcam)** on the prefab and set its **Follow / Look At** to that player's
+  transform **at runtime** — the prefab is instanced, so the target only exists after the player spawns.
+- Keep each player's vcam talking only to that player's Brain:
+  - **Cinemachine 3.x:** give each player a unique **Channel** — set the vcam's *Output Channel* and the
+    Brain's *Channel Mask* to match (assigned by player index on spawn).
+  - **Cinemachine 2.x:** put each player's vcam on a unique **Layer** and set each camera's
+    **Culling Mask** so a Brain only considers its own player's vcam.
+- Let **`PlayerInputManager`** arrange the viewports: enable its **Split-Screen** option and it lays out
+  each player camera's viewport rect automatically.
+- **Only one camera may be tagged `MainCamera`.** Multiple Main Cameras (or relying on `Camera.main`)
+  is the usual cause of "the player camera doesn't follow" — give each player camera its own Brain and a
+  unique channel/layer rather than leaning on a shared Main Camera.
+
+A working example is included: **`PlayerCameraChannelExample.cs`** (attach to the player prefab root)
+assigns each player a unique Cinemachine channel by player index on spawn, which is what
+`Scene-LocalMultiplayerSplitScreen` uses.
+
+> **Note:** this still requires the manual per-prefab wiring above — the example covers the common case,
+> but anything more advanced (camera framing, UI per player, etc.) is up to your game. Camera setup is
+> intentionally out of scope for an input asset.
+
+> **Planned improvement:** automatic camera + join/leave management (see below) so this wiring is
+> handled for you.
 
 > **Planned improvement:** a `PlayerInputManager` bridge that exposes join/leave events and a
 > per-player registry to formalise joining/leaving. Not included yet — today you wire the player
